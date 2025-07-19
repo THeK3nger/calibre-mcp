@@ -24,7 +24,7 @@ At the moment, this is a very development version. So, it is mostly focused for 
 2. Download the source code.
 
 ```bash
-git clone <this-repo-url>
+git clone git@github.com:THeK3nger/calibre-mcp.git
 cd calibre-mcp
 ``` 
 
@@ -74,7 +74,7 @@ uv run mcp install server.py
   }
 ```
 
-7. That's it. Now you can enjoy the MCP server.
+7. That's it. Now you can enjoy the MCP server. Just make sure you started Calibre's Content Server.
 
 ## Configuration with other clients 
 
