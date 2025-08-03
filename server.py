@@ -45,7 +45,7 @@ def listBooks(
     command_list = [
         "calibredb",
         "--with-library",
-        "http://localhost:8080/#Library",
+        calibre_url,
         "list",
         "--fields",
         ",".join(fields),
