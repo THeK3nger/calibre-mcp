@@ -7,7 +7,7 @@ This is an experimental Calibre MCP working via Calibre native Content Server.
 This MCP mostly wraps around `calibredb` so I plan to add all the features from it. Mainly:
 
 - [x] Query the Calibre library.
-- [ ] Search Books.
+- [x] Search Books.
 - [ ] Full Text Search.
 - [ ] Add/Remove Saved Searches.
 
