@@ -9,9 +9,11 @@ This MCP mostly wraps around `calibredb` so I plan to add all the features from 
 - [x] Query the Calibre library.
 - [x] Search Books.
 - [x] Full Text Search.
-- [ ] Add/Remove Saved Searches.
+- [x] Get Book's Metadata.
+- [x] List/Edit Custom Columns.
+- [ ] List/Edit Metadata.
 
-... and more.
+... and then we will see.
 
 ## How to use
 
