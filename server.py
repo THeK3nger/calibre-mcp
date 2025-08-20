@@ -141,5 +141,75 @@ def searchBooks(
         return f"Error executing search: {e}"
 
 
+@mcp.tool()
+def fullTextSearch(
+    search_expression: str,
+    include_snippets: bool = False,
+    restrict_to: str = "",
+    output_format: str = "text",
+    exact_words_only: bool = False,
+    match_start_marker: str = "<<",
+    match_end_marker: str = ">>",
+) -> str:
+    """
+    Perform a full text search on the entire Calibre library or a subset of books.
+
+    This searches within the actual content of books (e.g., inside EPUB files),
+    not just metadata like title, author, etc. Requires the library to be indexed.
+
+    Args:
+        search_expression (str): The text to search for within book contents
+        include_snippets (bool): Include text snippets around matches (slower but more informative)
+        restrict_to (str): Restrict search to specific books using search expression or IDs
+                          Examples: "ids:1,2,3" or "search:tag:fiction"
+        output_format (str): Output format - "text" for plain text or "json" for JSON
+        exact_words_only (bool): Only match exact words, not related words
+        match_start_marker (str): Marker for start of matched words in snippets
+        match_end_marker (str): Marker for end of matched words in snippets
+
+    Returns:
+        str: Full text search results with book matches and optional snippets
+    """
+
+    command_list = [
+        "calibredb",
+        "--with-library",
+        calibre_url,
+        "fts_search",
+    ]
+
+    if include_snippets:
+        command_list.append("--include-snippets")
+
+    if exact_words_only:
+        command_list.append("--do-not-match-on-related-words")
+
+    if restrict_to:
+        command_list.extend(["--restrict-to", restrict_to])
+
+    if output_format:
+        command_list.extend(["--output-format", output_format])
+
+    if match_start_marker != "<<":
+        command_list.extend(["--match-start-marker", match_start_marker])
+
+    if match_end_marker != ">>":
+        command_list.extend(["--match-end-marker", match_end_marker])
+
+    command_list.append(search_expression)
+
+    try:
+        result = subprocess.check_output(
+            command_list,
+            text=True,
+        )
+        return result.strip() if result.strip() else "No full text matches found."
+
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 1:
+            return "No full text matches found."
+        return f"Error executing full text search: {e}"
+
+
 if __name__ == "__main__":
     mcp.run()  # defaults to stdio transport
