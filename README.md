@@ -50,7 +50,6 @@ uv run mcp install server.py
         "/path/to/calibre-mcp/server.py"
       ]
     }
-  }
 ```
 
 6. Now we can add the two environment variables. Replace `CALIBRE_BASE_URL` with your Content Server URL and `CALIBRE_LIBRARY_ID` with your library ID.
@@ -71,7 +70,6 @@ uv run mcp install server.py
         "CALIBRE_LIBRARY_ID": "Library"
       }
     }
-  }
 ```
 
 7. That's it. Now you can enjoy the MCP server. Just make sure you started Calibre's Content Server.
