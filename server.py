@@ -248,5 +248,97 @@ def showDetails(book_id: str) -> str:
         return f"Error retrieving book details: {e}"
 
 
+@mcp.tool()
+def getCustomColumns(details: bool = False) -> str:
+    """
+    List all custom columns in the Calibre library.
+
+    This retrieves information about all custom columns that have been
+    defined in the library, including their names, types, and descriptions.
+
+    Args:
+        details (bool): Show detailed information about custom columns including
+                       column types, default values, and other metadata
+
+    Returns:
+        str: List of custom columns with their details
+    """
+
+    command_list = [
+        "calibredb",
+        "--with-library",
+        calibre_url,
+        "custom_columns",
+    ]
+
+    if details:
+        command_list.append("--details")
+
+    try:
+        result = subprocess.check_output(
+            command_list,
+            text=True,
+        )
+        return result.strip() if result.strip() else "No custom columns found in the library."
+
+    except subprocess.CalledProcessError as e:
+        return f"Error retrieving custom columns: {e}"
+
+
+@mcp.tool()
+def setCustomColumn(
+    book_id: str,
+    column_name: str,
+    value: str,
+    append: bool = False,
+) -> str:
+    """
+    Set the value of a custom column for a specific book.
+
+    This allows you to modify custom column values for books in the library.
+    Custom columns are user-defined metadata fields beyond the standard
+    Calibre fields like title, author, etc.
+
+    Args:
+        book_id (str): The unique ID of the book in the Calibre library
+        column_name (str): The name of the custom column to modify
+        value (str): The new value to set for the custom column
+        append (bool): If the column stores multiple values, append to existing
+                      values instead of replacing them
+
+    Returns:
+        str: Success message or error details
+    """
+
+    command_list = [
+        "calibredb",
+        "--with-library",
+        calibre_url,
+        "set_custom",
+    ]
+
+    if append:
+        command_list.append("--append")
+
+    command_list.extend([
+        column_name,
+        book_id,
+        value,
+    ])
+
+    try:
+        subprocess.check_output(
+            command_list,
+            text=True,
+        )
+        action = "appended to" if append else "set to"
+        return f"Successfully {action} custom column '{column_name}' with '{value}' for book ID {book_id}"
+
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 1:
+            return f"Error: Book ID '{book_id}' not found or invalid custom column '{column_name}'"
+        return f"Error setting custom column: {e}"
+
+
 if __name__ == "__main__":
     mcp.run()  # defaults to stdio transport
