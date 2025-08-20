@@ -211,5 +211,42 @@ def fullTextSearch(
         return f"Error executing full text search: {e}"
 
 
+@mcp.tool()
+def showDetails(book_id: str) -> str:
+    """
+    Show detailed metadata for a specific book by its ID.
+
+    This retrieves comprehensive metadata information for a single book
+    including title, authors, tags, series information, file formats,
+    publication details, and more.
+
+    Args:
+        book_id (str): The unique ID of the book in the Calibre library
+
+    Returns:
+        str: Detailed metadata information for the specified book
+    """
+
+    command_list = [
+        "calibredb",
+        "--with-library",
+        calibre_url,
+        "show_metadata",
+        book_id,
+    ]
+
+    try:
+        result = subprocess.check_output(
+            command_list,
+            text=True,
+        )
+        return result.strip()
+
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 1:
+            return f"Book with ID '{book_id}' not found in the library."
+        return f"Error retrieving book details: {e}"
+
+
 if __name__ == "__main__":
     mcp.run()  # defaults to stdio transport
